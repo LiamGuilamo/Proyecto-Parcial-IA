@@ -127,6 +127,66 @@ class BTRepeat(BTDecorator):
             self.count = 0
             return BT_SUCCESS
         
+        result = self.child.tick(agent)
+        if result == BT_SUCCESS:
+            self.count += 1
+            if self.count >= self.times:
+                self.count = 0
+                return BT_SUCCESS
+            return BT_RUNNING
+        return result
+    
+class BehaviorTree:
+    """Arbol de Comportamiento"""
+
+    def __init__(self):
+        self.root = root
+
+    def tick(self, agent):
+        """ejecuta un tick arbol"""
+        return self.root.tick(agent)
+    
+#acciones enemigos 
+def action_move_towards_player(agent):
+    """moverse hacia el jugador"""
+    if hasattr(agent, 'move_towards_player'):
+        agent.move_towards_player()
+        return BT_SUCCESS
+    return BT_FAILURE
+
+def action_shoot_at_player(agent):
+    """disparar al jugador"""
+    if hasattr(agent, 'shoot_at_player'):
+        agent.shoot_at_player()
+        return BT_SUCCESS
+    return BT_FAILURE
+
+def action_patrol(agent):
+    """accion:perseguir"""
+    if hasattr(agent, 'patrol'):
+        agent.patrol()
+        return BT_SUCCESS
+    return BT_FAILURE
+
+def condition_can_see_player(agent):
+    """condicion: poder ver al jugador"""
+    if hasattr(agent, 'can_see_player'):
+        return agent.can_see_player()
+    return False
+
+def condition_is_player_close(agent):
+    """condicion: el jugador esta cerca"""
+    if hasattr(agent, 'is_player_close'):
+        return agent.is_player_close()
+    return False    
+
+def condition_can_shoot(agent):
+    """condicion: puede disparar?"""
+    if hasattr(agent, 'can_shoot'):
+        return agent.can_shoot()
+    return False
+        
+        
 
 
             
