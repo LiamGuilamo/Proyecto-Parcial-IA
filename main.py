@@ -160,5 +160,123 @@ class Game:
                         self.sound_manager.play_sound("hit")
 
                         if self.player.lives <= 0:
+                            self.game_state = GAME_STATE_GAME_OVER
+                            self.game_over_menu = GameOverMenu(score=self.player.score)
+                        else:
+                            self.player.reset_position()
+                        break
+
+            #Coli Evil Otto
+            if self.evil_otto.check_collision(self.player):
+                if self.player.invulnerability_counter <= 0:
+                    self.player.lives -= 1
+                    self.sound_manager.play_sound("hit")
+
+                    if self.player.lives <= 0:
+                        self.game_state = GAME_STATE_GAME_OVER
+                        self.game_over_menu = GameOverMenu(score=self.player.score)
+                    else:
+                        self.player.resert_position()
+            
+            #coli enemigos
+            for enemy in self.enemies:
+                dist = math.sqrt((enemy.x - self.player.x)**2 + (enemy.y - self.player.y)**2)
+                if dist < 16 and self.player.invulnerability_counter <= 0:
+                    self.player.lives -= 1
+                    self.sound_manager.play_sound("hit")
+
+                    if self.player.lives <=0:
+                        self.game_state = GAME_STATE_GAME_OVER
+                        self.game_over_menu = GameOverMenu(score=self.player.score)
+                    else:
+                        self.player.reset_position()
+                    break
+
+            #el jugador escapo (verificar)
+            if self.player.check_exit(self.maze):
+                self.player.score += POINTS_ROOM_CLEAR_BONUS
+                self.game_state = GAME_STATE_VICTORY
+                self.victory_menu = VictoryMenu(score=self.player.score, level=self.level)
+                self.sound_manager.play_sound("explosion")
+
+            #gaancia de vidas
+            if self.player.score > 0 and self.player.score % POINTS_LIVES_GAINED_AT == 0:
+                # 5 vidas maximo
+                if self.player.lives < 5:
+                    self.player.lives += 1
+                    self.sound_manager.play_sound("shoot")
+
+    def draw(self):
+        """Juego paints"""
+        self.screen.fill(BLACK)
+
+        if self.game_state == GAME_STATE_MENU:
+            self.menu.draw(self.screen)
+
+        elif self.game_state == GAME_STATE_PLAYING:
+            #Dibujar mazmorra
+            self.maze.draw(self.screen, DARK_GRAY)
+
+            #jugador paints
+            self.player.draw(self.screen)
+
+            #enemy paints
+            for enemy in self.enemies:
+                enemy.draw(self.screen)
+
+            #dibujar Evil Otto
+            self.evil_otto.draw(self.screen)
+
+            #dibja HUD
+            self.draw_hud()
+        
+        elif self.game_state == GAME_STATE_GAME_OVER:
+            self.game_over_menu.draw(self.screen)
+
+        elif self.game_state == GAME_STATE_VICTORY:
+            self.victory_menu.draw(self.screen)
+
+        pygame.display.flip()
+
+    def draw_hud(self):
+        """interfaz del usuario"""
+        font = pygame.font.Font(None, 32)
+
+        # Puntuacion
+        score_text = font.render(f"puntuacion: {self.player.score}", True, WHITE)
+        self.screen.blit(lives_text, (10, 40))
+
+        #vida
+        lives_text = font.render(f"vidas: {self.player.lives}", True, WHITE)
+        self.screen.blit(lives_text, (10, 40))
+
+        #nivel
+        level_text = font.render(f"Nivel: {self.level}", True, WHITE)
+        self.screen.blit(level_text, (SCREEN_WIDTH - 200, 10))
+
+        #Enemigos restantes
+        enemies_text = font.render(f"Enemigos: {len(self.enemies)}", True, WHITE)
+        self.screen.blit(enemies_text, (SCREEN_WIDTH - 200, 40))
+
+        #Evil Otto
+        if self.evil_otto.active:
+            otto_text = font.render("EVIL OTTO!", True, RED)
+            self.screen.blit(otto_text, (SCREEN_WIDTH // 2 - 80, 10))
+
+    def run(self):
+        """Loop principal del juego"""
+        while self.runnig:
+            self.handle_input()
+            self.update()
+            self.draw()
+            self.clock.tick(FPS)
+
+        pygame.quit()
+
+
+
+
+
+
 
 
