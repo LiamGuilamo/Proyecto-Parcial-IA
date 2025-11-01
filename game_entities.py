@@ -181,6 +181,92 @@ class Enemy:
         self.patrol_target = None
         self.patrol_timer = 0
 
+        #comportamiento
+        self.player = None
+        self,bullets = None
+        self.sound_manager = None
+
+        #behavior
+        self.behavior_tree = self.create_behavior_treee()
+    
+    def create_behavior_tree(self):
+        """Arbol de comportamiento (enemigo)"""
+        if self.enemy_type == 1:
+            #perseguir y disparar si ve al jugador
+            root = BTSelector()
+
+            #rama 1: si puede disparar, dispare
+            shoot_sequence = BTSequence()
+            shoot_sequence.add_child(BTCondition(self.condition_can_see_player))
+            shoot_sequence.add_child(BTCondition(self.condition_can_shoot))
+            shoot_sequence.add_child(BTAction(self.action_shoot_at_player))
+
+            #rama 2: si ve al jugador, persiguelo
+            chase_sequence = BTSequence()
+            chase_sequence.add_child(BTCondition(self.condition_can_see_player))
+            chase_sequence.add_child(BTAction(self.action_move_towards_player))
+
+            #rama 3: patrullar
+            action_patrol = BTAction(self.action_patrol)
+
+            root.add_child(shoot_sequence)
+            root.add_child(chase_sequence)
+            root.add_child(action_patrol)
+
+            return BehaviorTree(root)
+        
+        else:
+            #tipo 2 y 3: mas agresivos 
+            root = BTPriority()
+
+            #Atacar si es posible
+            attack_seq = BTSequence()
+            attack_seq.add_child(BTCondition(self.condition_can_see_player))
+            attack_seq.add_child(BTCondition(self.condition_can_shoot))
+            attack_seq.add_child(BTAction(self.action_shoot_at_player))
+
+            #perseguir
+            chase_seq = BTSequence()
+            chase_seq.add_child(BTCondition(self.condition_can_see_player))
+            chase_seq.add_child(BTAction(self.action_move_towards_player))
+
+            #patrullar
+            patrol = BTAction(self.action_patrol)
+
+            root.add_child(attack_seq)
+            root.add_child(chase_seq)
+            root.add_child(patrol)
+
+            return BehaviorTree(root)
+        
+    #condiciones del behavior Tree
+    def condition_can_see_player(self, agent=None):
+        """cerifica si el enemigo puede ver al jugador"""
+        if self.player is None:
+            return False
+        
+        #distancia del jugador 
+        dx = self.player.x - self.x
+        dy = self.player.y - self.y
+        dist = math.sqrt(dx**2 + dy**2)
+        
+        #retornar true si esta dentro del rango de vision
+        return distance < self.vision_range
+    
+    def condition_can_shoot(self, agent=None):
+        """verifica si el jugador se encuentra cerca"""
+        if self.player is None:
+            return False
+        dx = self.player.x - self.x
+        dy = self.player.y - self.y
+        dist = math.sqrt(dx**2 + dy**2)
+        return dist < self.shoot_range
+    
+            
+
+
+        
+
     
 
         
