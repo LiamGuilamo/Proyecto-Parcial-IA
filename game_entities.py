@@ -262,6 +262,136 @@ class Enemy:
         dist = math.sqrt(dx**2 + dy**2)
         return dist < self.shoot_range
     
+    #acciones del behavior tree
+    def action_move_towards_player(self, agent=None):
+        """moverse hacia el jugador"""
+        if self.player is None:
+            return BT_FAILURE
+        
+        dx = self.player.x - self.x
+        dy = self.player.y - self.y
+        dist = math.sqrt(dx**2 + dy**2)
+
+        if dist > 0:
+            #normalizar direccion
+            self.direction = (int(dx / dist * 2), int(dy / dist * 2))
+
+            return BT_SUCCESS
+        
+        def action_shoot_at_player(self, agent=None):
+            """accion disparar al jugador"""
+            if self.player is None or self.bullets is None:
+                return BT_FAILURE
+            
+            dx = self.player.x - self.x
+            dy = self.player.y - self.y
+            dist = math.sqrt(dx**2 + dy**2)
+
+            #solo disparar si esta en el rango
+            if 0 < dist < self.shoot_range:
+                #direcciones del disparador 
+                bullet_dx = int(dx / dist)
+                bullet_dy = int (dy / dist)
+                bullet = Bullet(self.x, self.y, bullet_dx, bullet_dy, is_player=False)
+                self.shoot_cooldown = ENEMY_SHOOT_COOLDOWN
+                if self.sound_manager:
+                    self.sound_manager.play_sound("enemy_shoot")
+                return BT_SUCCESS
+            
+            return BT_FAILURE
+        
+        def action_patrol(self, agent=None):
+            """patrullar aleatoriamente"""
+            self.patrol_timer -= 1
+
+            if self.patrol_timer <= 0:
+                #elegir nueva direccion 
+                angle = random.random() * 2 * math.pi
+                self.direction = (int(math.cos(angle) * 2), int(math.sin(angle) * 2))
+                self.patrol_timer = random.randint(30, 100)
+        
+        return BT_SUCCESS
+    
+    def update(self, player, maze, bullets, sound_manager):
+        """actualizar el estado del enemigo"""
+        self.player = player
+        self.bullets = bullets
+        self.sound_manager = sound_manager
+
+        #ejecutar behavior tree
+        self.behavior_tree.tick(self)
+
+        #movimiento basado en la direccion
+        if self.direction != DIRECTIONS["NONE"]:
+            dx, dy = self.direction
+            new_x = self.x + dx * self.speed
+            new_y = self.y + dy * self.speed
+
+            if maze.is_walkable(new_x, new_y) and maze.is_walkable(new_x + self.width, new_y + self.height):
+                self.x = new_x
+                self.y = new_y
+
+        #actualizar cooldown
+        if self.shoot_cooldown > 0:
+            self.shoot_cooldown -= 1
+
+    def draw(self, screen):
+        """dibuja el enemigo"""
+        colors = [RED, pygame.Color("orange"), pygame.Color("purpple")]
+        colors = colors[min(self.enemy_type - 1, len(colors) - 1)]
+
+        pygame.draw.rect(screen, color, (self.x - self.width // 2, self.y - self.height // 2, self.width, self.height))
+        pygame.draw.circle(screen, WHITE, (int(self.x), int(self.y)), 2)
+
+        #debug: dibujar rango de vision
+
+
+class EvilOtto:
+    """Enemigo especial"""
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.radius = 12
+        self.speed = ENEMY_SPEED * 1.5
+        self.active = False
+        self.time_untill_spawn = EVIL_OTTO_SPAWN_TIME
+
+    def update(self, player, maze):
+        """actualizacion de Evil Otto"""
+        if not self.active:
+            self.time_untill_spawn -= 1
+            if self.time_untill_spawn <= 0: 
+                self.active = True
+                print("EVIL OTTO HA APARECIDO")
+
+        if self.active and player:
+            dx = player.x - self.x
+            dy = player.y - self.y
+            dist = math.sqrt(dx**2 + dy**2)
+
+            if dist > 0: 
+                # Evil Otto puede atravesar muro
+                self.x += (dx / dist) * self.speed
+                self.y += (dy / dist) * self.speed
+
+    def draw(self, screen):
+        """EVIL OTTO"""
+        if self.active:
+            pygame.draw.circle(screen, YELLOW, (int(self.x), int( self.y)), self.radius)
+            #ojos
+            pygame.draw.circle(screen, BLACK, (int(self.x) - 5, int(self.y) - 3), 2)
+            pygame.draw.circle(screen, BLACK, (int(self.x) + 5, int(self.y) - 3), 2)
+
+    def check_collision(self, player):
+        """verifica colision con el jugador"""
+        if not self.active:
+            return False
+
+        dist = math.sqrt((player.x - self.x)**2 + (player.y - self.y)**2)
+        return dist < (self.radius + player.width // 2)
+
+    
             
 
 
