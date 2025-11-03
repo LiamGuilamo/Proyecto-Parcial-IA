@@ -32,7 +32,7 @@ class SoundManager:
             sample = int(32767 * 0.3 * math.sin(phase))
             sound_data.append(sample)
             sound_data.append(sample)
-
+        
         import array
         arr = array.array('h', sound_data)
         sound = pygame.sndarray.make_sound(arr)
@@ -53,7 +53,7 @@ class SoundManager:
                     self.sounds[sound_name] = self.create_beep_sound(300, 200)
                 else:
                     return
-                
+            
             channel = pygame.mixer.find_channel()
             if channel:
                 channel.set_volume(self.sfx_volume)

@@ -31,8 +31,8 @@ class AStar:
         self.cols = len(grid[0]) if self.rows > 0 else 0
     
     def heuristic(self, pos1, pos2):
-        """heuristica de distancia"""
-        return abs(pos1[0] - pos2[0] + abs(pos1[1] - pos2[1]))
+        """Heurística de distancia de Manhattan"""
+        return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
     
     def get_neighbors(self, position):
         """Obtiene vecinos válidos de una posición"""
@@ -44,7 +44,7 @@ class AStar:
         
         for dx, dy in directions:
             nx, ny = x + dx, y + dy
-
+            
             # Verificar límites
             if 0 <= nx < self.cols and 0 <= ny < self.rows:
                 # Verificar si no es obstáculo
@@ -63,7 +63,7 @@ class AStar:
         
         open_list = []
         closed_set = set()
-
+        
         heapq.heappush(open_list, start_node)
         
         while open_list:
@@ -110,5 +110,3 @@ class AStar:
     def get_pixel_coords(self, grid_pos):
         """Convierte coordenadas de grilla a coordenadas de píxeles"""
         return (grid_pos[0] * self.tile_size, grid_pos[1] * self.tile_size)
-
-            

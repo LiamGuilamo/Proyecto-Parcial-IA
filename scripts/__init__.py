@@ -1,3 +1,8 @@
+# Paquete de scripts del juego
+"""
+Módulos del juego Maze Runner
+"""
+
 __all__ = [
     'constants',
     'pathfinding',
