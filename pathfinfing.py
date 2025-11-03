@@ -63,4 +63,52 @@ class AStar:
         
         open_list = []
         closed_set = set()
+
+        heapq.heappush(open_list, start_node)
+        
+        while open_list:
+            current_node = heapq.heappop(open_list)
+            
+            if current_node.position == goal_node.position:
+                # Reconstruir camino
+                path = []
+                node = current_node
+                while node:
+                    path.append(node.position)
+                    node = node.parent
+                return path[::-1]  # Invertir para obtener start -> goal
+            
+            closed_set.add(current_node.position)
+            
+            for neighbor_pos in self.get_neighbors(current_node.position):
+                if neighbor_pos in closed_set:
+                    continue
+                
+                neighbor_node = Node(neighbor_pos, current_node)
+                neighbor_node.g = current_node.g + 1
+                neighbor_node.h = self.heuristic(neighbor_pos, goal)
+                neighbor_node.f = neighbor_node.g + neighbor_node.h
+                
+                # Verificar si ya existe en open_list con mejor f
+                existing = None
+                for node in open_list:
+                    if node.position == neighbor_pos:
+                        existing = node
+                        break
+                
+                if existing is None or neighbor_node.f < existing.f:
+                    if existing:
+                        open_list.remove(existing)
+                    heapq.heappush(open_list, neighbor_node)
+        
+        return []  # No hay camino disponible
+    
+    def get_grid_coords(self, pixel_pos):
+        """Convierte coordenadas de píxeles a coordenadas de grilla"""
+        return (pixel_pos[0] // self.tile_size, pixel_pos[1] // self.tile_size)
+    
+    def get_pixel_coords(self, grid_pos):
+        """Convierte coordenadas de grilla a coordenadas de píxeles"""
+        return (grid_pos[0] * self.tile_size, grid_pos[1] * self.tile_size)
+
             
