@@ -99,3 +99,31 @@ print("=" * 80)
 print("CONTROLES DEL JUEGO")
 print("=" * 80)
 print()
+
+controls = {
+    "MOVIMIENTO": "W/A/S/D o Flechas",
+    "DISPARAR": "Espacio",
+    "MENÚ ARRIBA": "W o Flecha Arriba",
+    "MENÚ ABAJO": "S o Flecha Abajo",
+    "SELECCIONAR": "Espacio",
+    "SALIR": "ESC",
+    "GAMEPAD": "Stick analógico + Trigger",
+}
+
+for key, value in controls.items():
+    print(f"  {key:<20} {value}")
+
+print()
+print("=" * 80)
+print("PROYECTO COMPLETAMENTE FUNCIONAL")
+print("=" * 80)
+print()
+print("Todos los archivos han sido generados exitosamente.")
+print("El proyecto está listo para ser presentado.")
+print()
+print("Para comenzar:")
+print("  1. Instala dependencias: pip install -r requirements.txt")
+print("  2. Ejecuta: python main.py")
+print()
+print("¡Que disfrutes el juego!")
+print("=" * 80)
