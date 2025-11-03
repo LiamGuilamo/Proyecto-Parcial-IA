@@ -4,7 +4,7 @@ import math
 from constants import *
 from maze import Maze
 from game_entities import Player, Enemy, Bullet, EvilOtto
-from pathfinding import AStar
+from pathfinfing import AStar
 from sound_manager import SoundManager
 from menu import Menu, GameOverMenu, VictoryMenu
 
