@@ -64,7 +64,7 @@ class BTSelector(BTNode):
     def tick(self, agent):
         for child in self.children:
             result = child.tick(agent)
-            if result == BT_SUCCESS
+            if result == BT_SUCCESS:
                 return BT_SUCCESS
             elif result == BT_RUNNING:
                 return BT_RUNNING
@@ -139,7 +139,7 @@ class BTRepeat(BTDecorator):
 class BehaviorTree:
     """Arbol de Comportamiento"""
 
-    def __init__(self):
+    def __init__(self,root):
         self.root = root
 
     def tick(self, agent):

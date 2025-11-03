@@ -108,7 +108,7 @@ class Game:
 
         keys = pygame.key.get_pressed()
 
-        if self.game_state == GAME_SATE_MENU:
+        if self.game_state == GAME_STATE_MENU:
             self.menu.handle_input(keys)
 
         elif self.game_state == GAME_STATE_PLAYING:
