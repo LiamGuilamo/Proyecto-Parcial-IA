@@ -1,4 +1,5 @@
-
+#Nombre: Liam Enmanuel Lopez Guilamo
+#Matricula:22-SISN-2-065
 # Crear un archivo de checklist final
 files_info = [
     ("main.py", "Archivo de entrada principal - ejecutar este para iniciar el juego"),

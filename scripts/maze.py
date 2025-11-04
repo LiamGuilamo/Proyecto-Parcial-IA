@@ -1,4 +1,6 @@
 # Generador y manager de mazmorras
+#Nombre: Liam Enmanuel Lopez Guilamo
+#Matricula:22-SISN-2-065
 import random
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE
 

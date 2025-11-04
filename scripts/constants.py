@@ -1,4 +1,6 @@
 # Constantes del juego
+#Nombre: Liam Enmanuel Lopez Guilamo
+#Matricula:22-SISN-2-065
 import pygame
 
 # Dimensiones de pantalla

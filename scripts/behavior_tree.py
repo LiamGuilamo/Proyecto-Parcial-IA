@@ -1,3 +1,5 @@
+#Nombre: Liam Enmanuel Lopez Guilamo
+#Matricula:22-SISN-2-065
 # Implementación de Behavior Tree desde cero
 from constants import BT_SUCCESS, BT_FAILURE, BT_RUNNING
 

@@ -1,4 +1,6 @@
 # Implementación de A* Pathfinding desde cero
+#Nombre: Liam Enmanuel Lopez Guilamo
+#Matricula:22-SISN-2-065
 import heapq
 import math
 

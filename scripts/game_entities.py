@@ -1,4 +1,6 @@
 # Entidades del juego (Jugador, Enemigos, Proyectiles) - VERSIÓN CORREGIDA
+#Nombre: Liam Enmanuel Lopez Guilamo
+#Matricula:22-SISN-2-065
 import pygame
 import math
 import random
