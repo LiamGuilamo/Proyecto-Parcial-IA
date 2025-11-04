@@ -124,11 +124,23 @@ class Player:
             return True
         return False
     
-    def reset_position(self):
-        """Resetea la posición del jugador al inicio"""
-        self.x = SCREEN_WIDTH // 4
-        self.y = SCREEN_HEIGHT // 2
+    def reset_position(self, maze=None):
+        if maze:
+        # Buscar un punto aleatorio que sea transitable
+           while True:
+               new_x = random.randint(1, maze.width - 2) * TILE_SIZE + TILE_SIZE // 2
+               new_y = random.randint(1, maze.height - 2) * TILE_SIZE + TILE_SIZE // 2
+               if maze.is_walkable(new_x, new_y):
+                  self.x = new_x
+                  self.y = new_y
+                  break
+        else: 
+        # Si no hay referencia al maze, usar posición por defecto
+            self.x = SCREEN_WIDTH // 4
+            self.y = SCREEN_HEIGHT // 2
+  
         self.invulnerability_counter = self.respawn_invulnerability
+
 
 class Bullet:
     """Clase de proyectil"""
@@ -148,7 +160,7 @@ class Bullet:
         self.y += self.dy * self.speed
         
         # Comprobar colisión con muros
-        if not maze.is_walkable(self.x, self.y):
+        if not maze.is_walkable(int(self.x), int(self.y)):
             return False  # Eliminar proyectil
         
         # Comprobar si salió de la pantalla
@@ -294,8 +306,8 @@ class Enemy:
         # Solo disparar si está en rango y puede ver
         if 0 < dist < self.shoot_range:
             # Normalizar dirección del disparo
-            bullet_dx = int(dx / dist)
-            bullet_dy = int(dy / dist)
+            bullet_dx = dx / dist
+            bullet_dy = dy / dist
             bullet = Bullet(self.x, self.y, bullet_dx, bullet_dy, is_player=False)
             self.bullets.append(bullet)
             self.shoot_cooldown = ENEMY_SHOOT_COOLDOWN
@@ -358,7 +370,7 @@ class EvilOtto:
         self.x = x
         self.y = y
         self.radius = 12
-        self.speed = ENEMY_SPEED * 1.5
+        self.speed = ENEMY_SPEED * 0.8
         self.active = False
         self.time_until_spawn = EVIL_OTTO_SPAWN_TIME
     

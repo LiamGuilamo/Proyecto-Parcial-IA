@@ -20,10 +20,10 @@ DARK_GRAY = (64, 64, 64)
 # Configuración de juego
 FPS = 60
 PLAYER_SPEED = 4
-ENEMY_SPEED = 2
-BULLET_SPEED = 6
-SHOOT_COOLDOWN = 20
-ENEMY_SHOOT_COOLDOWN = 30
+ENEMY_SPEED = 1
+BULLET_SPEED = 4
+SHOOT_COOLDOWN = 50
+ENEMY_SHOOT_COOLDOWN = 70
 EVIL_OTTO_SPAWN_TIME = 300  # Frames antes de que aparezca Evil Otto
 
 # Tipos de nodos en Behavior Tree

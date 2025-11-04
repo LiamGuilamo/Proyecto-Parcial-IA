@@ -13,6 +13,7 @@ class Game:
     """Clase principal del juego"""
     
     def __init__(self, fullscreen=True):
+        pygame.mixer.pre_init(44100, -16, 2, 512)
         pygame.init()
         
         if fullscreen:
@@ -157,7 +158,7 @@ class Game:
                     if dist < 16:
                         self.bullets.remove(bullet)
                         self.enemies.remove(enemy)
-                         
+                        self.player.score += 100  # o la cantidad que prefieras
                         self.sound_manager.play_sound("explosion")
                         break
             
@@ -201,7 +202,7 @@ class Game:
                         self.game_state = GAME_STATE_GAME_OVER
                         self.game_over_menu = GameOverMenu(score=self.player.score)
                     else:
-                        self.player.reset_position()
+                       self.player.reset_position(self.maze)
                     break
             
             # Verificar si el jugador escapó
@@ -216,7 +217,7 @@ class Game:
                 # Limitar a 5 vidas máximo
                 if self.player.lives < 5:
                     self.player.lives += 1
-                    self.sound_manager.play_sound("shoot")
+                    self.sound_manager.play_sound("shoot.wav")
     
     def draw(self):
         """Dibuja el juego"""
