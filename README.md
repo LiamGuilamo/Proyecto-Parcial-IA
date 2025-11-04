@@ -7,3 +7,4 @@
 ## Proyecto: Proyecto de Berzerk
 https://youtu.be/kYHV5SCbpf4
 este es el video de youtube
+LINK DEL REPOSITORIO: https://github.com/LiamGuilamo/Proyecto-Parcial-IA.git
