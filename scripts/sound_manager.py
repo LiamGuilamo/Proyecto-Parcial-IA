@@ -1,4 +1,4 @@
-# sound_manager.py (reemplaza todo el archivo con esto)
+
 #Nombre: Liam Enmanuel Lopez Guilamo
 #Matricula:22-SISN-2-065
 import pygame
